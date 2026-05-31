@@ -2,34 +2,36 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Terminal, Cpu, HardDrive, Shield } from "lucide-react";
 import { useScrollAnimations, scrollPresets } from "../components/useScrollAnimations";
+import rehmanImg from "../assets/rehman.png";
 
 export default function Team() {
   const [activeConsole, setActiveConsole] = useState(null);
 
   const team = [
     {
-      id: "vandal",
-      name: "VANDAL",
-      role: "SYSTEM ARCHITECT",
-      avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuDoKh2QJs1TDumocuWElbhwz4YbWw8o1rZOfLR52GuEUEbGZIMgEnKnhkFAQA1wpJ3XDZVirtG2up_NpkhNSI09mwrxkfXR4BOpPuUUd-HSy3_m7HZiFD0Sq3BpKr34ZJHgtVRxbc1FfRRWk2xLWRDbvRkeUwgic3NRSCXO75nQBMigV2e1Ta1jsTSEezpXszR1RuRqL2yWA5qCtFRe6poiDO1PtuKoy0ZHfYccvxe9gmgSzDYa40D4mpJbGsNOnp92nU1h2jT-reF0",
+      id: "ABDUL REHMAN HASHMI",
+      name: "ER. HASHMI ABDUL REHMAN ",
+      role: "SYSTEM ARCHITECT & TEAM LEAD",
+      avatar: rehmanImg,
+      position: "object-[-80%_10%]",
+      imgClass: "scale-[1.35] translate-x-10 -translate-y-8",
       specs: {
-        optimization: "99.8%",
-        latency: "10ms",
-        primary_tool: "NEOVIM // NEXTJS",
-        threat_level: "OPTIMAL"
+        optimization: "TEAM LEADER",
+        latency: "DESIGNING SYSTEM ARCHITECT AND UI/UX",
+        primary_tool: "REACT // NEXTJS // design software",
       },
-      logs: [
-        "> INITIALIZING ARCHITECTURE...",
-        "> HEAP ALLOCATION STABLE",
-        "> COMPILING PRODUCTION ASSETS...",
-        "> CORE STATUS: ACTIVE"
+      bio: [
+        "Er. Hashmi Abdul Rehman\nTeam Leader | Designing System Architect | UI/UX Specialist",
+        "Hashmi Abdul Rehman is a brilliant digital architect and UI/UX visionary who seamlessly bridges the gap between high-performance engineering and striking, modern design. As a natural Team Leader, he specializes in orchestrating complex projects from concept to deployment, utilizing a powerful toolkit that includes React, Next.js, and industry-leading design software.",
+        "A fiercely competitive innovator and multiple hackathon winner, Hashmi has consistently proven his ability to build rapidly and effectively under pressure, with standout performances at major tech events like Hacktoon 1.0 and Hawkathon 2026. Beyond his technical accolades, he is a driven Startup Founder. Whether he is leading operations at Decor Glass and Solutions (DGS) or engineering comprehensive digital platforms like Homigoz, his work is defined by a commitment to scalable architecture and sleek, modern aesthetics.",
+        "With a relentless focus on crafting clean, high-performance assets, Hashmi doesn't just write code or design interfaces—he engineers complete, production-ready digital ecosystems."
       ]
     },
     {
       id: "syntax",
       name: "SYNTAX",
       role: "COMPILER CORE",
-      avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuCsMKJ1WuvJsDOaTvu2achGIzR_xrdhMfGQQoiAa4NeU2cpHR7SxaQhfNkvfCp0GNchXk1wUtwVEg2jLOLfE787NLIS5jBluuJ60IADi12j8eZLt6X1xylQdC0MocTlXMJtF7a9Exy6G8up0cAmFV_og-kEgvxwLyDr4eZwVJnaqbjWRi1_w2AQDqiIXvWcWNZgR8_BCM5hT8kQM14fXcLT7kdNWqK2ZZ4fltlINzU-B7pjL5sP17FLjpUGXnDg1-NcSVPAnrLjVgDZ",
+      avatar: "",
       specs: {
         optimization: "99.9%",
         latency: "8ms",
@@ -47,7 +49,7 @@ export default function Team() {
       id: "matrix",
       name: "MATRIX",
       role: "SHADER ARTIST",
-      avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuBTEunwGiIHK5zSy6DsplUyUSaqh_3NtqJb252HDyLXxXIg9dakQr6P8FgE0XBg9ZmyA5akPMhmRYDij0Lbr_3bts3gwpblEunFGNclBB2OpU25v0S8UlecWqVi71BqXfCG83Cy2EqcZNQbG_urvBSgPkY0a3fSg36BqAo1hF62rTDbuhkF1KvzKrlW6Zh2nd-ETsbnFMFGNTvfJ9FfxfnqMXOVKHq7AkIiAWfmmct5N0kLUOsrysi5fT9YnFf4k0elHbNse0LDkPjG",
+      avatar: "",
       specs: {
         optimization: "99.5%",
         latency: "12ms",
@@ -158,17 +160,17 @@ export default function Team() {
         <div className="team-grid grid grid-cols-1 md:grid-cols-3 gap-12">
           {team.map((member, idx) => {
             const isConsoleOpen = activeConsole === member.id;
-            
+
             return (
-              <div 
+              <div
                 key={member.id}
-                className={`team-card-${idx} border-thick border-primary bg-white neo-shadow flex flex-col justify-between overflow-hidden hover-lift`}
+                className={`team-card-${idx} border-thick border-primary bg-white neo-shadow flex flex-col justify-between overflow-hidden hover-lift group`}
               >
                 {/* Visual Header */}
-                <div className="relative overflow-hidden h-[300px] border-b-thick border-primary pointer-events-none select-none">
+                <div className="relative overflow-hidden h-[450px] border-b-thick border-primary pointer-events-none select-none bg-[radial-gradient(var(--color-primary)_1px,transparent_1px)] [background-size:16px_16px] bg-surface-container-high">
                   <img
                     alt={member.name}
-                    className="team-avatar w-full h-full object-cover grayscale brightness-90 transition-all duration-300 img-reveal"
+                    className={`team-avatar w-full h-full object-cover grayscale brightness-90 transition-all duration-300 img-reveal group-hover:grayscale-0 group-hover:brightness-100 ${member.position || 'object-center'} ${member.imgClass || ''}`}
                     loading="lazy"
                     onLoad={(e) => e.currentTarget.classList.add('loaded')}
                     src={member.avatar}
@@ -186,9 +188,8 @@ export default function Team() {
                     </h2>
                     <button
                       onClick={() => handleToggleConsole(member.id)}
-                      className={`w-10 h-10 border border-primary flex items-center justify-center cursor-pointer transition-colors ${
-                        isConsoleOpen ? "bg-primary text-white" : "bg-background hover:bg-primary hover:text-white"
-                      }`}
+                      className={`w-10 h-10 border border-primary flex items-center justify-center cursor-pointer transition-colors ${isConsoleOpen ? "bg-primary text-white" : "bg-background hover:bg-primary hover:text-white"
+                        }`}
                     >
                       <Terminal size={18} />
                     </button>
@@ -197,11 +198,11 @@ export default function Team() {
                   {/* Specification Table */}
                   <div className="space-y-2 font-mono text-[11px] text-secondary select-none uppercase">
                     <div className="team-spec-row flex justify-between border-b border-primary/20 pb-1">
-                      <span className="flex items-center gap-1"><Cpu size={12} /> ENGINE_OPT</span>
+                      <span className="flex items-center gap-1"><Cpu size={12} /> JOB</span>
                       <span className="text-primary font-bold">{member.specs.optimization}</span>
                     </div>
                     <div className="team-spec-row flex justify-between border-b border-primary/20 pb-1">
-                      <span className="flex items-center gap-1"><HardDrive size={12} /> NET_LATENCY</span>
+                      <span className="flex items-center gap-1"><HardDrive size={12} /> ROLE</span>
                       <span className="text-primary font-bold">{member.specs.latency}</span>
                     </div>
                     <div className="team-spec-row flex justify-between border-b border-primary/20 pb-1">
@@ -220,14 +221,32 @@ export default function Team() {
                       exit={{ height: 0 }}
                       className="bg-primary text-on-secondary font-mono text-[10px] p-6 border-t-thick border-primary overflow-hidden"
                     >
-                      <div className="text-on-tertiary-container mb-2 uppercase select-none font-bold">
-                        &gt; DEBUGGER CONSOLE: ACTIVE
-                      </div>
-                      <div className="space-y-1 uppercase leading-normal">
-                        {member.logs.map((log, idx) => (
-                          <div key={idx} className="opacity-95">{log}</div>
-                        ))}
-                      </div>
+                      {member.bio ? (
+                        <div className="space-y-3 normal-case leading-relaxed text-xs">
+                          {member.bio.map((paragraph, idx) => {
+                            if (idx === 0) {
+                              const [title, subtitle] = paragraph.split('\n');
+                              return (
+                                <div key={idx} className="border-b border-white/20 pb-2 mb-2">
+                                  <div className="font-display text-[14px] md:text-[16px] font-black tracking-wide">{title}</div>
+                                  <div className="font-mono text-[10px] md:text-[11px] opacity-80 mt-1">{subtitle}</div>
+                                </div>
+                              );
+                            }
+                            return (
+                              <p key={idx} className="opacity-95 text-[11px] leading-relaxed">
+                                {paragraph}
+                              </p>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="space-y-1 uppercase leading-normal">
+                          {member.logs.map((log, idx) => (
+                            <div key={idx} className="opacity-95">{log}</div>
+                          ))}
+                        </div>
+                      )}
                     </motion.div>
                   )}
                 </AnimatePresence>
