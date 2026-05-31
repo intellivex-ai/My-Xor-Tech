@@ -34,6 +34,8 @@ function ScrollToTop() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    // Force ScrollTrigger to recalculate coordinate limits after page load
+    ScrollTrigger.refresh();
   }, [pathname]);
 
   return null;
@@ -119,6 +121,16 @@ function PageLoaderWrapper({ children, isMenuOpen }) {
     }, 5000);
     return () => clearTimeout(timer);
   }, [isPageChanging, isThemeChanging]);
+
+  // Recalculate GSAP ScrollTrigger offsets once the UI finishes loading
+  useEffect(() => {
+    if (!isInitialLoading && !isPageChanging && !isThemeChanging) {
+      const timer = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [isInitialLoading, isPageChanging, isThemeChanging]);
 
   return (
     <>

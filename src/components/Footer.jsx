@@ -35,9 +35,9 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer ref={footerRef} className="bg-primary text-on-secondary grid grid-cols-1 md:grid-cols-12 gap-0 w-full p-grid-margin border-t-thick border-primary overflow-hidden">
+    <footer ref={footerRef} className="bg-primary text-on-secondary grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-0 w-full p-6 md:p-12 border-t-thick border-primary overflow-hidden">
       {/* Brand Metadata */}
-      <div className="footer-brand md:col-span-4 mb-12 md:mb-0">
+      <div className="footer-brand md:col-span-4 mb-8 md:mb-0">
         <Link 
           to="/"
           className="flex items-center gap-3 font-display text-headline-md font-black text-on-secondary uppercase mb-4 tracking-tighter"
@@ -51,7 +51,7 @@ export default function Footer() {
       </div>
 
       {/* Directory Menu */}
-      <div className="footer-columns md:col-span-4 grid grid-cols-2 gap-0 mb-12 md:mb-0">
+      <div className="footer-columns md:col-span-4 grid grid-cols-2 gap-4 md:gap-0 mb-8 md:mb-0">
         <div className="footer-col">
           <div className="font-mono text-label-caps text-on-tertiary-container mb-6 font-bold">MENU</div>
           <ul className="space-y-4">
@@ -73,6 +73,16 @@ export default function Footer() {
             <li>
               <Link to="/about" className="font-mono text-label-caps text-on-secondary hover:text-surface-variant transition-colors">
                 ABOUT
+              </Link>
+            </li>
+            <li>
+              <Link to="/team" className="font-mono text-label-caps text-on-secondary hover:text-surface-variant transition-colors">
+                TEAM
+              </Link>
+            </li>
+            <li>
+              <Link to="/contact" className="font-mono text-label-caps text-on-secondary hover:text-surface-variant transition-colors">
+                CONTACT
               </Link>
             </li>
           </ul>
@@ -149,7 +159,7 @@ export default function Footer() {
             <Share2 size={18} />
           </button>
         </div>
-        <div className="footer-copyright font-mono text-[10px] text-on-tertiary-container opacity-60 font-bold uppercase tracking-widest text-left md:text-right mt-6 md:mr-48">
+        <div className="footer-copyright font-mono text-[10px] text-on-tertiary-container opacity-60 font-bold uppercase tracking-widest text-left md:text-right mt-6">
           ©{new Date().getFullYear()} MY XOR TECH // ALL RIGHTS RESERVED
         </div>
       </div>
