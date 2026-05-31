@@ -170,7 +170,7 @@ export default function Team() {
                 <div className="relative overflow-hidden h-[450px] border-b-thick border-primary pointer-events-none select-none bg-[radial-gradient(var(--color-primary)_1px,transparent_1px)] [background-size:16px_16px] bg-surface-container-high">
                   <img
                     alt={member.name}
-                    className={`team-avatar w-full h-full object-cover grayscale brightness-90 transition-all duration-300 img-reveal group-hover:grayscale-0 group-hover:brightness-100 ${member.position || 'object-center'} ${member.imgClass || ''}`}
+                    className={`team-avatar w-full h-full object-cover grayscale-0 brightness-100 md:grayscale md:brightness-90 transition-all duration-300 img-reveal group-hover:grayscale-0 group-hover:brightness-100 ${member.position || 'object-center'} ${member.imgClass || ''}`}
                     loading="lazy"
                     onLoad={(e) => e.currentTarget.classList.add('loaded')}
                     src={member.avatar}
