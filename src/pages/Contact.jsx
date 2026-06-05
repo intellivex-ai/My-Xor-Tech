@@ -3,10 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Terminal, Send, CheckCircle } from "lucide-react";
 import { useScrollAnimations, scrollPresets } from "../components/useScrollAnimations";
 
+const ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || "YOUR_ACCESS_KEY_HERE";
+
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", specs: "" });
   const [compilingLog, setCompilingLog] = useState([]);
   const [step, setStep] = useState("form"); // form, compiling, success
+  const [submissionError, setSubmissionError] = useState(null);
 
   const logsSequence = [
     "> INITIALIZING CONNECTION PROTOCOL...",
@@ -15,8 +18,7 @@ export default function Contact() {
     "> CHANNEL ESTABLISHED // SECURE (AES-256)",
     "> COMPILING BLUEPRINT SPECIFICATION PAYLOAD...",
     "> ENCAPSULATING METADATA LOGS...",
-    "> DISPATCHING PAYLOAD TO ENGINE COORDINATES...",
-    "> DEPLOYMENT COMPLETED SUCCESS // hello@myxor.tech (STATUS: 200 OK)"
+    "> DISPATCHING PAYLOAD TO ENGINE COORDINATES..."
   ];
 
   const handleSubmit = (e) => {
@@ -28,26 +30,75 @@ export default function Contact() {
 
     setStep("compiling");
     setCompilingLog([]);
-  };
+    setSubmissionError(null);
 
-  useEffect(() => {
-    if (step !== "compiling") return;
+    // Start sending the form data immediately to Web3Forms
+    const submissionPromise = (async () => {
+      if (ACCESS_KEY === "YOUR_ACCESS_KEY_HERE" || !ACCESS_KEY) {
+        return { 
+          success: false, 
+          error: "MISSING ACCESS KEY. Please configure VITE_WEB3FORMS_ACCESS_KEY in your env file." 
+        };
+      }
+      try {
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: ACCESS_KEY,
+            name: form.name,
+            email: form.email,
+            message: form.specs,
+            subject: `New Contact Submission from ${form.name}`,
+            from_name: "MY XOR TECH Specs Compiler",
+            replyto: form.email,
+          }),
+        });
 
-    let index = 0;
-    const interval = setInterval(() => {
-      if (index < logsSequence.length) {
-        setCompilingLog((prev) => [...prev, logsSequence[index]]);
-        index++;
+        const data = await response.json();
+        if (response.ok && data.success) {
+          return { success: true };
+        } else {
+          return { success: false, error: data.message || "API Error" };
+        }
+      } catch (err) {
+        return { success: false, error: err.message || "Network Error" };
+      }
+    })();
+
+    // Run the animation
+    let currentLogIndex = 0;
+    const interval = setInterval(async () => {
+      if (currentLogIndex < logsSequence.length) {
+        setCompilingLog((prev) => [...prev, logsSequence[currentLogIndex]]);
+        currentLogIndex++;
       } else {
         clearInterval(interval);
-        setTimeout(() => {
-          setStep("success");
-        }, 1000);
+        
+        // Wait for submission result
+        const result = await submissionPromise;
+        if (result.success) {
+          setCompilingLog((prev) => [
+            ...prev,
+            "> DEPLOYMENT COMPLETED SUCCESS // myxortech@gmail.com (STATUS: 200 OK)"
+          ]);
+          setTimeout(() => {
+            setStep("success");
+          }, 1200);
+        } else {
+          setCompilingLog((prev) => [
+            ...prev,
+            `> CONNECTION ERROR // COMPILATION FAILED (STATUS: 500)`,
+            `> REASON: ${result.error.toUpperCase()}`
+          ]);
+          setSubmissionError(result.error);
+        }
       }
     }, 450);
-
-    return () => clearInterval(interval);
-  }, [step]);
+  };
 
   // GSAP ScrollTrigger animations scoped to the page
   const pageRef = useScrollAnimations((container) => {
@@ -182,17 +233,38 @@ export default function Contact() {
                   <div>
                     <div className="text-on-tertiary-container mb-4 font-bold border-b border-on-secondary/15 pb-2 flex justify-between uppercase text-[10px]">
                       <span>&gt; RUNNING BLUEPRINT COMPILER SECTOR_9</span>
-                      <span className="animate-pulse text-error">COMPILING</span>
+                      {submissionError ? (
+                        <span className="text-error font-bold">FAILED</span>
+                      ) : (
+                        <span className="animate-pulse text-on-tertiary-container">COMPILING</span>
+                      )}
                     </div>
                     <div className="space-y-2 text-[11px] uppercase tracking-wider leading-relaxed">
                       {compilingLog.map((log, idx) => (
-                        <div key={idx} className="opacity-95">{log}</div>
+                        <div key={idx} className={`${log.includes('ERROR') || log.includes('REASON') ? 'text-error font-bold' : 'opacity-95'}`}>{log}</div>
                       ))}
                     </div>
                   </div>
-                  <div className="mt-8 text-on-tertiary-container text-[9px] uppercase tracking-widest text-right font-bold">
-                    AGENT CODE COMPILING STATUS: {(compilingLog.length / logsSequence.length * 100).toFixed(0)}%
-                  </div>
+                  {submissionError ? (
+                    <div className="mt-6 border-t border-on-secondary/15 pt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+                      <span className="text-[9px] text-error uppercase tracking-widest font-bold">
+                        TRANSMISSION BLOCKED
+                      </span>
+                      <button
+                        onClick={() => {
+                          setStep("form");
+                          setSubmissionError(null);
+                        }}
+                        className="px-4 py-2 bg-on-secondary text-primary font-mono text-[10px] font-bold uppercase hover:bg-white transition-colors cursor-pointer"
+                      >
+                        RETRY TRANSMISSION
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="mt-8 text-on-tertiary-container text-[9px] uppercase tracking-widest text-right font-bold">
+                      AGENT CODE COMPILING STATUS: {Math.min(100, (compilingLog.length / (logsSequence.length + 1) * 100)).toFixed(0)}%
+                    </div>
+                  )}
                 </div>
               )}
 

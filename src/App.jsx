@@ -20,6 +20,8 @@ import Projects from "./pages/Projects";
 import About from "./pages/About";
 import Team from "./pages/Team";
 import Contact from "./pages/Contact";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 
 // Shared page transition wrapper for smooth route changes
 const pageTransition = {
@@ -232,6 +234,8 @@ function AnimatedRoutes() {
         <Route path="/about" element={wrap(About)} />
         <Route path="/team" element={wrap(Team)} />
         <Route path="/contact" element={wrap(Contact)} />
+        <Route path="/terms" element={wrap(Terms)} />
+        <Route path="/privacy" element={wrap(Privacy)} />
       </Routes>
     </AnimatePresence>
   );

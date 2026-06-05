@@ -93,19 +93,14 @@ export default function Footer() {
           <div className="font-mono text-label-caps text-on-tertiary-container mb-6 font-bold">LEGAL</div>
           <ul className="space-y-4">
             <li>
-              <a href="#" className="font-mono text-label-caps text-on-secondary hover:text-surface-variant transition-colors">
+              <Link to="/terms" className="font-mono text-label-caps text-on-secondary hover:text-surface-variant transition-colors">
                 TERMS OF USE
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="font-mono text-label-caps text-on-secondary hover:text-surface-variant transition-colors">
+              <Link to="/privacy" className="font-mono text-label-caps text-on-secondary hover:text-surface-variant transition-colors">
                 PRIVACY POLICY
-              </a>
-            </li>
-            <li>
-              <a href="#" className="font-mono text-label-caps text-on-secondary hover:text-surface-variant transition-colors">
-                COOKIES LOG
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -115,9 +110,18 @@ export default function Footer() {
       <div className="md:col-span-4 flex flex-col md:items-end justify-between select-none">
         <div className="footer-social flex gap-6 mb-8 md:mb-0">
           <a
-            href="mailto:hello@myxor.tech"
+            href="mailto:myxortech@gmail.com"
+            onClick={async (e) => {
+              try {
+                await navigator.clipboard.writeText("myxortech@gmail.com");
+                alert("Copied email address (myxortech@gmail.com) to clipboard.");
+              } catch (err) {
+                console.error("Failed to copy:", err);
+              }
+            }}
             className="footer-social-icon w-10 h-10 border border-on-secondary flex items-center justify-center hover:bg-background hover:text-primary transition-colors cursor-pointer"
             aria-label="Email Us"
+            title="myxortech@gmail.com"
           >
             <Mail size={18} />
           </a>
@@ -127,6 +131,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             className="footer-social-icon w-10 h-10 border border-on-secondary flex items-center justify-center hover:bg-background hover:text-primary transition-colors cursor-pointer"
             aria-label="Website"
+            title="myxor.tech"
           >
             <Globe size={18} />
           </a>
@@ -155,6 +160,7 @@ export default function Footer() {
             }}
             className="footer-social-icon w-10 h-10 border border-on-secondary flex items-center justify-center hover:bg-background hover:text-primary transition-colors cursor-pointer"
             aria-label="Share"
+            title="Share Website"
           >
             <Share2 size={18} />
           </button>

@@ -4,6 +4,15 @@ import { Terminal, Cpu, HardDrive, Shield } from "lucide-react";
 import { useScrollAnimations, scrollPresets } from "../components/useScrollAnimations";
 import rehmanImg from "../assets/rehman.png";
 
+const getInitials = (name) => {
+  const cleanName = name.replace(/^(er\.|er)\s+/i, "").trim();
+  const parts = cleanName.split(/\s+/);
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+  return cleanName.slice(0, 2).toUpperCase();
+};
+
 export default function Team() {
   const [activeConsole, setActiveConsole] = useState(null);
 
@@ -28,39 +37,56 @@ export default function Team() {
       ]
     },
     {
-      id: "syntax",
-      name: "SYNTAX",
-      role: "COMPILER CORE",
+      id: "Aamna Mohin Pathan",
+      name: "ER Aamna Mohin Pathan",
+      role: "OUTREACH & CONVERSION",
       avatar: "",
       specs: {
-        optimization: "99.9%",
-        latency: "8ms",
-        primary_tool: "RUST // WEBGL",
+        optimization: "OUTREACH & CONVERSION",
+        latency: "BUSINESS DEVELOPMENT & DIGITAL MARKETING EXECUTIVE",
+        primary_tool: "OUTLOOK // SOCIAL MEDIA // CRM ",
         threat_level: "SECURE"
       },
-      logs: [
-        "> INITIALIZING COMPILER...",
-        "> CONNECTING TO CLOUD WORKSPACE...",
-        "> RUNNING UNIT TESTS... 100% OK",
-        "> SYNTAX READY // COMPILER COMPILED"
+      bio: [
+        "Er. Aamna Mohin Pathan\nBusiness Development Executive | Outreach Specialist | Digital Marketing",
+        "Aamna Mohin Pathan is a business development and digital marketing professional with a focused eye for opportunity and a natural ability to connect with people. She specializes in recognizing businesses that have yet to establish a digital presence and guiding them toward solutions that create lasting impact. Her approach is never transactional — she takes the time to understand each client's world, builds trust organically, and positions the right offering at the right moment, making every interaction feel purposeful rather than pressured.",
+        "What sets her apart is the way she brings together two disciplines that are often kept separate — direct client outreach and strategic digital advertising — into one cohesive and high-performing workflow. From the very first touchpoint to the moment a deal is finalized, she moves with consistency, clarity, and a quiet confidence that clients respond to. Her work reflects not just an ability to generate results, but an understanding of what it truly takes to build meaningful business relationships in a competitive digital landscape"
       ]
     },
     {
-      id: "matrix",
-      name: "MATRIX",
-      role: "SHADER ARTIST",
+      id: "Adiba Abdul Taksim Khan",
+      name: "Er. Adiba Abdul Taksim Khan",
+      role: "FRONTEND DEVELOPER",
       avatar: "",
       specs: {
-        optimization: "99.5%",
-        latency: "12ms",
-        primary_tool: "THREE.JS // GLSL",
+        optimization: "FRONTEND DEVELOPER",
+        latency: "DEVELOPING & DESIGNING UI/UX",
+        primary_tool: "REACT // NEXTJS // THREE.JS // GLSL",
         threat_level: "ELEVATED"
       },
-      logs: [
-        "> BOOTING WEBGL CANVAS...",
-        "> DRAWING BLUEPRINT SCHEMATICS...",
-        "> COMPILING SHADERS...",
-        "> MATRIX ACTIVE // 60 FPS STABLE"
+       bio: [
+        "Er. Adiba Abdul Taksim Khan\nFrontend Developer | UI Implementation Specialist | Interactive Web Craftsman",
+        "Er. Adiba Abdul Taksim Khan is a creative and precise frontend developer who builds websites from the ground up using raw, powerful web technologies: REACT, NEXTJS, THREE.JS, GLSL and JavaScript. With a strong eye for layout composition and user interaction, she turns static designs into fully responsive, interactive, and cross-browser compatible web experiences.",
+        "A detail-driven builder and enthusiastic problem solver, Adiba excels at crafting clean, semantic markup, elegant styling, and lightweight JavaScript functionality without relying on heavy frameworks. Her work loads fast, scales beautifully across devices, and remains accessible to all users.",
+        "Whether she is developing hand-coded landing pages, interactive dashboards, or dynamic client-side features, Adiba’s output is defined by clarity, consistency, and a deep respect for web fundamentals. She doesn't just write code — she builds reliable, engaging digital spaces that work everywhere."
+      ]
+    },
+        {
+      id: "SAHIL SHAIKH",
+      name: "Er. SAHIL SHAIKH",
+      role: "Product Developer & Systems Logic",
+      avatar: "",
+      specs: {
+        optimization: "SYSTEM DEVELOPER",
+        latency: "Product Developer & Systems Logic",
+        primary_tool: "PYTHON // JAVA // REACT // FASTAPI",
+        threat_level: "ELEVATED"
+      },
+       bio: [
+        "Er. SAHIL SHAIKH\SYSTEM Developer | Product Development | Systems Logic Engineer",
+        "Sahil Shaikh is a product-focused engineer who specialises in translating raw ideas into functional, efficient systems. His strength lies in building the logic layer — designing how a product thinks, behaves, and scales before a single pixel is placed.",
+        "A first-year CS student and active builder, Sahil has already shipped two live products: TruSay, a real-time UPI fraud detection system with GPT-powered explainable alerts, and Homizgo, a PG and hostel discovery platform for students. Both projects reflect his approach — solve real problems, build fast, and keep the architecture clean.",
+        "Working across Python, Java, HTML, React, and FastAPI, Sahil focuses on the intersection of product thinking and backend efficiency. At MY XOR TECH, he drives product development and ensures the internal logic of every system is built to perform — not just to ship."
       ]
     }
   ];
@@ -157,7 +183,7 @@ export default function Team() {
 
       {/* Grid of Team Cards */}
       <section className="max-w-[1440px] mx-auto border-x-thick border-b-thick border-primary p-6 md:p-12 select-none overflow-hidden">
-        <div className="team-grid grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div className="team-grid grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
           {team.map((member, idx) => {
             const isConsoleOpen = activeConsole === member.id;
 
@@ -167,14 +193,60 @@ export default function Team() {
                 className={`team-card-${idx} border-thick border-primary bg-white neo-shadow flex flex-col justify-between overflow-hidden hover-lift group`}
               >
                 {/* Visual Header */}
-                <div className="relative overflow-hidden h-[450px] border-b-thick border-primary pointer-events-none select-none bg-[radial-gradient(var(--color-primary)_1px,transparent_1px)] [background-size:16px_16px] bg-surface-container-high">
-                  <img
-                    alt={member.name}
-                    className={`team-avatar w-full h-full object-cover grayscale-0 brightness-100 md:grayscale md:brightness-90 transition-all duration-300 img-reveal group-hover:grayscale-0 group-hover:brightness-100 ${member.position || 'object-center'} ${member.imgClass || ''}`}
-                    loading="lazy"
-                    onLoad={(e) => e.currentTarget.classList.add('loaded')}
-                    src={member.avatar}
-                  />
+                <div className="relative overflow-hidden w-full aspect-[3/4] border-b-thick border-primary pointer-events-none select-none bg-[radial-gradient(var(--color-primary)_1px,transparent_1px)] [background-size:16px_16px] bg-surface-container-high">
+                  {member.avatar ? (
+                    <img
+                      alt={member.name}
+                      className={`team-avatar w-full h-full object-cover grayscale-0 brightness-100 md:grayscale md:brightness-90 transition-all duration-300 img-reveal group-hover:grayscale-0 group-hover:brightness-100 ${member.position || 'object-center'} ${member.imgClass || ''}`}
+                      loading="lazy"
+                      onLoad={(e) => e.currentTarget.classList.add('loaded')}
+                      src={member.avatar}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center relative bg-surface-container-high/25 select-none">
+                      {/* Corner bracket markers */}
+                      <div className="absolute top-6 left-6 w-4 h-4 border-t-2 border-l-2 border-primary/45" />
+                      <div className="absolute top-6 right-6 w-4 h-4 border-t-2 border-r-2 border-primary/45" />
+                      <div className="absolute bottom-6 left-6 w-4 h-4 border-b-2 border-l-2 border-primary/45" />
+                      <div className="absolute bottom-6 right-6 w-4 h-4 border-b-2 border-r-2 border-primary/45" />
+                      
+                      {/* Tech info tags */}
+                      <div className="absolute top-8 left-8 font-mono text-[9px] text-primary/50 flex flex-col gap-0.5 uppercase tracking-widest leading-none">
+                        <span>SYS.REF: {member.id.replace(/\s+/g, "_").slice(0, 8).toUpperCase()}_MEMBER</span>
+                        <span>SECTOR: DIGITAL_OPS</span>
+                      </div>
+                      
+                      <div className="absolute top-8 right-8 font-mono text-[9px] text-primary/50 flex flex-col items-end gap-0.5 uppercase tracking-widest leading-none">
+                        <span>RENDER: BYPASS</span>
+                        <span>VISUAL: NO_DATA</span>
+                      </div>
+
+                      {/* Cybernetic HUD graphics */}
+                      <div className="relative w-36 h-36 sm:w-44 sm:h-44 md:w-48 md:h-48 flex items-center justify-center">
+                        {/* Animated outer ring */}
+                        <div className="absolute inset-0 rounded-full border border-dashed border-primary/20 animate-[spin_60s_linear_infinite]" />
+                        {/* Inner static/dotted rings */}
+                        <div className="absolute w-[85%] h-[85%] rounded-full border border-dotted border-primary/30" />
+                        <div className="absolute w-[70%] h-[70%] rounded-full border border-primary/10" />
+                        
+                        {/* Big brutalist initials monogram */}
+                        <span className="font-display text-[56px] sm:text-[64px] md:text-[72px] font-black tracking-tighter text-primary/20 group-hover:text-primary/40 group-hover:scale-105 transition-all duration-500 leading-none select-none z-10">
+                          {getInitials(member.name)}
+                        </span>
+                        
+                        {/* Crosshair markers inside */}
+                        <div className="absolute left-0 right-0 h-[1px] bg-primary/10" />
+                        <div className="absolute top-0 bottom-0 w-[1px] bg-primary/10" />
+                      </div>
+
+                      {/* Warning/Bypass message */}
+                      <div className="absolute bottom-12 left-0 right-0 text-center font-mono text-[10px] text-primary/60 uppercase tracking-widest flex flex-col gap-1 items-center">
+                        <span className="px-2 py-0.5 bg-primary/10 border border-primary/25 rounded-sm animate-pulse">
+                          ENCRYPTED_SIGNATURE
+                        </span>
+                      </div>
+                    </div>
+                  )}
                   <span className="absolute bottom-4 left-4 bg-primary text-white px-3 py-1 font-mono text-[10px] font-bold">
                     {member.role}
                   </span>
