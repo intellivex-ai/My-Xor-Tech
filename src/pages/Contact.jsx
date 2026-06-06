@@ -11,11 +11,11 @@ export default function Contact() {
   const [step, setStep] = useState("form"); // form, compiling, success
   const [submissionError, setSubmissionError] = useState(null);
   const navigate = useNavigate();
-  const [countdown, setCountdown] = useState(4);
+  const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {
     if (step === "success") {
-      setCountdown(4);
+      setCountdown(5);
       const interval = setInterval(() => {
         setCountdown((prev) => {
           if (prev <= 1) {
@@ -93,7 +93,8 @@ export default function Contact() {
     let currentLogIndex = 0;
     const interval = setInterval(async () => {
       if (currentLogIndex < logsSequence.length) {
-        setCompilingLog((prev) => [...prev, logsSequence[currentLogIndex]]);
+        const logLine = logsSequence[currentLogIndex];
+        setCompilingLog((prev) => [...prev, logLine]);
         currentLogIndex++;
       } else {
         clearInterval(interval);
@@ -109,12 +110,13 @@ export default function Contact() {
             setStep("success");
           }, 1200);
         } else {
+          const errorMessage = result.error || "UNKNOWN ERROR";
           setCompilingLog((prev) => [
             ...prev,
             `> CONNECTION ERROR // COMPILATION FAILED (STATUS: 500)`,
-            `> REASON: ${result.error.toUpperCase()}`
+            `> REASON: ${errorMessage.toUpperCase()}`
           ]);
-          setSubmissionError(result.error);
+          setSubmissionError(errorMessage);
         }
       }
     }, 450);
@@ -273,7 +275,7 @@ export default function Contact() {
                     </div>
                     <div className="space-y-2 text-[11px] uppercase tracking-wider leading-relaxed">
                       {compilingLog.map((log, idx) => (
-                        <div key={idx} className={`${log.includes('ERROR') || log.includes('REASON') ? 'text-error font-bold' : 'opacity-95'}`}>{log}</div>
+                        <div key={idx} className={`${log && (log.includes('ERROR') || log.includes('REASON')) ? 'text-error font-bold' : 'opacity-95'}`}>{log || ""}</div>
                       ))}
                     </div>
                   </div>
@@ -328,7 +330,7 @@ export default function Contact() {
                         onClick={() => navigate("/")}
                         className="w-full bg-primary text-on-secondary py-4 mt-4 font-display text-label-lg font-bold uppercase hover:bg-white hover:text-primary border-thick border-primary transition-all cursor-pointer active:translate-y-[2px]"
                       >
-                        RETURN HOME IMMEDIATELY
+                        OK
                       </button>
                     </div>
                   </div>
