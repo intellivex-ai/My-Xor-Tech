@@ -83,12 +83,54 @@ export default function Team() {
         threat_level: "ELEVATED"
       },
        bio: [
-        "Er. SAHIL SHAIKH\SYSTEM Developer | Product Development | Systems Logic Engineer",
+        "Er. SAHIL SHAIKH\nSYSTEM Developer | Product Development | Systems Logic Engineer",
         "Sahil Shaikh is a product-focused engineer who specialises in translating raw ideas into functional, efficient systems. His strength lies in building the logic layer — designing how a product thinks, behaves, and scales before a single pixel is placed.",
         "A first-year CS student and active builder, Sahil has already shipped two live products: TruSay, a real-time UPI fraud detection system with GPT-powered explainable alerts, and Homizgo, a PG and hostel discovery platform for students. Both projects reflect his approach — solve real problems, build fast, and keep the architecture clean.",
         "Working across Python, Java, HTML, React, and FastAPI, Sahil focuses on the intersection of product thinking and backend efficiency. At MY XOR TECH, he drives product development and ensures the internal logic of every system is built to perform — not just to ship."
       ]
-    }
+    },
+    {
+      id: "YASHLOK SINGH",
+      name: "YASHLOK SINGH",
+      role: "FULL STACK DEVELOPER ",
+      avatar: "",
+      specs: {
+        optimization: "SOFTWARE ENGINEER",
+        latency: "BACKEND ARCHITECTURE & DATABASE DESIGN ",
+        primary_tool: "NEXTJS // NODEJS // POSTGRESQL // MYSQL // MONGODB // FIREBASE",
+        threat_level: "MAXIMUM"
+      },
+      bio: [
+        "YASHLOK SINGH\nBACKEND ARCHITECTURE | DATABASE DESIGN ",
+        " Yashlok engineers scalable, high-performance digital products from the ground up. By bridging secure backend infrastructures with intuitive, modern frontends, he transforms complex business challenges into sleek, production-ready solutions.",
+        "Approaching every project with an architect’s lens, he designs systems optimized for speed, security, and long-term growth.Core Strengths: End-to-End Expertise: Seamlessly integrates cloud services, robust APIs, and responsive React interfaces.",
+        "Scalable Architecture: Designs advanced database and backend ecosystems built to handle real-world business demands.User-Centric Performance: Balances technical power with exceptional, refined user experiences.",
+        "Yashlok doesn’t just write code—he engineers robust digital ecosystems that empower users, accelerate growth, and stand the test of scale."
+      ]
+    },
+    {
+      id: "ABDUSSAMAD HASHMI",
+      name: "ABDUSSAMAD HASHMI",
+      role: " Strategic Finance Leader & CFO",
+      avatar: "",
+      specs: {
+        optimization: "FINANCE DEPARTMENT",
+        latency: "STRATEGIC FINANCIAL PLANNING & MANAGEMENT",
+        primary_tool: "FINANCIAL PLANNING // BUDGETING // RISK MANAGEMENT",
+        threat_level: "ELEVATED"
+      },
+      bio: [
+       "ABDUSSAMAD HASHMI\nChief Financial Officer (CFO) | Strategic Finance Leader",
+        "Abdussamad Hashmi is a finance-focused leader responsible for guiding the company's financial strategy and long-term growth. Through careful planning, budgeting, and performance analysis, he supports informed decision-making that strengthens profitability and business stability With a strong analytical approach, he balances growth opportunities with financial discipline, ensuring resources are used effectively and risks are managed responsibly. His focus remains on creating sustainable value while helping the organization achieve its strategic objectives.",
+"Core Expertise",
+"* Financial Strategy & Leadership",
+"* Budgeting & Forecasting",
+"* Risk Management",
+"* Business Performance Analysis",
+"* Growth & Expansion Planning"
+    ]
+    },
+   
   ];
 
   const handleToggleConsole = (id) => {
@@ -123,22 +165,22 @@ export default function Team() {
       const card = `.team-card-${idx}`;
 
       // Card entrance — alternating slide directions with scale
-      if (idx === 1) {
-        // Center card fades up with scale
-        scrollPresets.fadeUpScale(
-          ".team-grid",
-          card,
-          { duration: 1.2, stagger: 0, start: "top 80%" }
-        );
-      } else if (idx === 0) {
-        // Left card slides from left
+      if (idx % 2 === 0) {
+        // Even index cards slide from left
         scrollPresets.slideLeft(
           ".team-grid",
           card,
           { duration: 1.0, start: "top 80%" }
         );
+      } else if (idx === 1) {
+        // Index 1 (first odd card) fades up with scale for visual variation
+        scrollPresets.fadeUpScale(
+          ".team-grid",
+          card,
+          { duration: 1.2, stagger: 0, start: "top 80%" }
+        );
       } else {
-        // Right card slides from right
+        // Other odd index cards slide from right
         scrollPresets.slideRight(
           ".team-grid",
           card,

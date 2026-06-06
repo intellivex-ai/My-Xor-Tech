@@ -1,16 +1,28 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Marquee from "../components/Marquee";
-import { ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowRight, CheckCircle, Terminal, Send } from "lucide-react";
 import { useScrollAnimations, scrollPresets } from "../components/useScrollAnimations";
 
 const ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || "YOUR_ACCESS_KEY_HERE";
 
 export default function Services() {
-  const [formData, setFormData] = useState({ name: "", email: "", terms: false });
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", specs: "" });
   const [formStatus, setFormStatus] = useState("idle"); // idle, compiling, success
   const navigate = useNavigate();
   const [countdown, setCountdown] = useState(4);
+  const [compilingLog, setCompilingLog] = useState([]);
+  const [submissionError, setSubmissionError] = useState(null);
+
+  const logsSequence = [
+    "> INITIALIZING CONNECTION PROTOCOL...",
+    "> RESOLVING EMAIL INGEST HOSTNAME... OK",
+    "> AUTHENTICATING ENCRYPTED CHANNEL...",
+    "> CHANNEL ESTABLISHED // SECURE (AES-256)",
+    "> COMPILING BLUEPRINT SPECIFICATION PAYLOAD...",
+    "> ENCAPSULATING METADATA LOGS...",
+    "> DISPATCHING PAYLOAD TO ENGINE COORDINATES..."
+  ];
 
   useEffect(() => {
     if (formStatus === "success") {
@@ -60,51 +72,83 @@ export default function Services() {
     }
   ];
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.terms) {
+    if (!formData.name || !formData.email || !formData.phone || !formData.specs) {
       alert("PLEASE COMPLY WITH ALL PROTOCOLS.");
       return;
     }
     setFormStatus("compiling");
+    setCompilingLog([]);
+    setSubmissionError(null);
 
-    if (ACCESS_KEY === "YOUR_ACCESS_KEY_HERE" || !ACCESS_KEY) {
-      console.warn("MISSING ACCESS KEY. Falling back to mock success.");
-      setTimeout(() => {
-        setFormStatus("success");
-      }, 1500);
-      return;
-    }
-
-    try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          access_key: ACCESS_KEY,
-          name: formData.name,
-          email: formData.email,
-          message: "Terms accepted, registering spec.",
-          subject: `New Services Registration from ${formData.name}`,
-          from_name: "MY XOR TECH Services Compiler",
-          replyto: formData.email,
-        }),
-      });
-
-      const data = await response.json();
-      if (response.ok && data.success) {
-        setFormStatus("success");
-      } else {
-        console.error("Submission failed:", data.message || "API Error");
-        setFormStatus("success");
+    // Start sending the form data immediately to Web3Forms
+    const submissionPromise = (async () => {
+      if (ACCESS_KEY === "YOUR_ACCESS_KEY_HERE" || !ACCESS_KEY) {
+        return { 
+          success: false, 
+          error: "MISSING ACCESS KEY. Please configure VITE_WEB3FORMS_ACCESS_KEY in your env file." 
+        };
       }
-    } catch (err) {
-      console.error("Network error during submission:", err);
-      setFormStatus("success");
-    }
+      try {
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: ACCESS_KEY,
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            message: formData.specs,
+            subject: `New Services Registration from ${formData.name}`,
+            from_name: "MY XOR TECH Services Compiler",
+            replyto: formData.email,
+          }),
+        });
+
+        const data = await response.json();
+        if (response.ok && data.success) {
+          return { success: true };
+        } else {
+          return { success: false, error: data.message || "API Error" };
+        }
+      } catch (err) {
+        return { success: false, error: err.message || "Network Error" };
+      }
+    })();
+
+    // Run the animation
+    let currentLogIndex = 0;
+    const interval = setInterval(async () => {
+      if (currentLogIndex < logsSequence.length) {
+        setCompilingLog((prev) => [...prev, logsSequence[currentLogIndex]]);
+        currentLogIndex++;
+      } else {
+        clearInterval(interval);
+        
+        // Wait for submission result
+        const result = await submissionPromise;
+        if (result.success) {
+          setCompilingLog((prev) => [
+            ...prev,
+            "> DEPLOYMENT COMPLETED SUCCESS // myxortech@gmail.com (STATUS: 200 OK)"
+          ]);
+          setTimeout(() => {
+            setFormStatus("success");
+          }, 1200);
+        } else {
+          setCompilingLog((prev) => [
+            ...prev,
+            `> CONNECTION ERROR // COMPILATION FAILED (STATUS: 500)`,
+            `> REASON: ${result.error.toUpperCase()}`
+          ]);
+          setSubmissionError(result.error);
+        }
+      }
+    }, 450);
   };
 
   // GSAP ScrollTrigger animations scoped to the page
@@ -261,60 +305,110 @@ export default function Services() {
           </div>
 
           {/* Neo-brutalist Lead Capture Form */}
-          <div className="svc-form border-thick border-primary p-8 bg-white neo-shadow flex flex-col justify-between">
-            <h4 className="font-display text-headline-md font-black uppercase mb-6 text-primary">
-              REGISTRATION
-            </h4>
+          <div className="svc-form bg-white border-thick border-primary p-8 neo-shadow relative overflow-hidden min-h-[500px] flex flex-col justify-between">
             
             {formStatus === "idle" && (
               <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="flex justify-between items-center mb-4 border-b border-primary/20 pb-4">
+                  <div className="flex items-center gap-2">
+                    <Terminal size={18} />
+                    <span className="font-mono text-[11px] font-bold text-primary uppercase">SPECS COMPILER V4</span>
+                  </div>
+                  <span className="font-mono text-[9px] text-secondary tracking-widest uppercase">INPUT READY</span>
+                </div>
+
                 <div className="space-y-2">
-                  <label className="font-mono text-label-caps font-bold text-primary">NAME</label>
+                  <label className="font-mono text-label-caps font-bold text-primary">CLIENT NAME</label>
                   <input
                     required
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full border-thick border-primary p-4 font-mono text-body-md focus:outline-none focus:bg-surface-container-low transition-colors rounded-none"
-                    placeholder="ENTER SPECIFICATION NAME"
+                    placeholder="ENTER SPECIFICATION REGISTER NAME"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="font-mono text-label-caps font-bold text-primary">E-MAIL</label>
+                  <label className="font-mono text-label-caps font-bold text-primary">EMAIL NODE</label>
                   <input
                     required
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full border-thick border-primary p-4 font-mono text-body-md focus:outline-none focus:bg-surface-container-low transition-colors rounded-none"
-                    placeholder="ENTER EMAIL ADDRESS"
+                    placeholder="ENTER REGISTERED EMAIL NODE"
                   />
                 </div>
-                <div className="flex items-center gap-3 py-2 cursor-pointer">
+
+                <div className="space-y-2">
+                  <label className="font-mono text-label-caps font-bold text-primary">PHONE NODE</label>
                   <input
-                    id="terms"
-                    type="checkbox"
-                    checked={formData.terms}
-                    onChange={(e) => setFormData({ ...formData, terms: e.target.checked })}
-                    className="w-6 h-6 border-thick border-primary text-primary focus:ring-0 rounded-none cursor-pointer"
+                    required
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full border-thick border-primary p-4 font-mono text-body-md focus:outline-none focus:bg-surface-container-low transition-colors rounded-none"
+                    placeholder="ENTER REGISTERED TELEPHONE NODE"
                   />
-                  <label htmlFor="terms" className="font-mono text-[10px] font-bold tracking-widest uppercase cursor-pointer select-none">
-                    I ACCEPT ALL SYSTEM TERMS OF SERVICE
-                  </label>
+                </div>
+                <div className="space-y-2">
+                  <label className="font-mono text-label-caps font-bold text-primary">BLUEPRINT SPECIFICATIONS / MESSAGE</label>
+                  <textarea
+                    required
+                    rows={4}
+                    value={formData.specs}
+                    onChange={(e) => setFormData({ ...formData, specs: e.target.value })}
+                    className="w-full border-thick border-primary p-4 font-mono text-body-md focus:outline-none focus:bg-surface-container-low transition-colors rounded-none"
+                    placeholder="COMPOSE BLUEPRINT SPECS..."
+                  />
                 </div>
                 <button
                   type="submit"
-                  className="w-full bg-primary text-on-secondary py-5 font-display text-headline-md font-bold hover:bg-white hover:text-primary border-thick border-primary transition-all cursor-pointer active:translate-y-[2px]"
+                  className="w-full bg-primary text-on-secondary py-5 font-display text-headline-md font-bold uppercase hover:bg-white hover:text-primary border-thick border-primary transition-all flex items-center justify-center gap-3 cursor-pointer active:translate-y-[2px]"
                 >
-                  GO // SUBMIT
+                  <Send size={18} />
+                  COMPILE & SEND PROTOCOL
                 </button>
               </form>
             )}
 
             {formStatus === "compiling" && (
-              <div className="py-12 flex flex-col items-center justify-center font-mono text-body-lg gap-4">
-                <span className="animate-spin border-4 border-primary border-t-transparent w-10 h-10 rounded-full" />
-                <span className="uppercase tracking-widest animate-pulse">&gt; COMPILING_DATA...</span>
+              <div className="flex-grow flex flex-col justify-between font-mono bg-primary text-on-secondary p-6 h-[400px] select-none border border-primary overflow-y-auto custom-scrollbar-none">
+                <div>
+                  <div className="text-on-tertiary-container mb-4 font-bold border-b border-on-secondary/15 pb-2 flex justify-between uppercase text-[10px]">
+                    <span>&gt; RUNNING BLUEPRINT COMPILER SECTOR_9</span>
+                    {submissionError ? (
+                      <span className="text-error font-bold">FAILED</span>
+                    ) : (
+                      <span className="animate-pulse text-on-tertiary-container">COMPILING</span>
+                    )}
+                  </div>
+                  <div className="space-y-2 text-[11px] uppercase tracking-wider leading-relaxed">
+                    {compilingLog.map((log, idx) => (
+                      <div key={idx} className={`${log.includes('ERROR') || log.includes('REASON') ? 'text-error font-bold' : 'opacity-95'}`}>{log}</div>
+                    ))}
+                  </div>
+                </div>
+                {submissionError ? (
+                  <div className="mt-6 border-t border-on-secondary/15 pt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <span className="text-[9px] text-error uppercase tracking-widest font-bold">
+                      TRANSMISSION BLOCKED
+                    </span>
+                    <button
+                      onClick={() => {
+                        setFormStatus("idle");
+                        setSubmissionError(null);
+                      }}
+                      className="px-4 py-2 bg-on-secondary text-primary font-mono text-[10px] font-bold uppercase hover:bg-white transition-colors cursor-pointer"
+                    >
+                      RETRY TRANSMISSION
+                    </button>
+                  </div>
+                ) : (
+                  <div className="mt-8 text-on-tertiary-container text-[9px] uppercase tracking-widest text-right font-bold">
+                    AGENT CODE COMPILING STATUS: {Math.min(100, (compilingLog.length / (logsSequence.length + 1) * 100)).toFixed(0)}%
+                  </div>
+                )}
               </div>
             )}
 

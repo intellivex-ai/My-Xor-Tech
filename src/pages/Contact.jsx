@@ -6,7 +6,7 @@ import { useScrollAnimations, scrollPresets } from "../components/useScrollAnima
 const ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || "YOUR_ACCESS_KEY_HERE";
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: "", email: "", specs: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", specs: "" });
   const [compilingLog, setCompilingLog] = useState([]);
   const [step, setStep] = useState("form"); // form, compiling, success
   const [submissionError, setSubmissionError] = useState(null);
@@ -42,7 +42,7 @@ export default function Contact() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.specs) {
+    if (!form.name || !form.email || !form.phone || !form.specs) {
       alert("ERROR: COMPLY WITH ALL PROTOCOLS FIRST.");
       return;
     }
@@ -70,6 +70,7 @@ export default function Contact() {
             access_key: ACCESS_KEY,
             name: form.name,
             email: form.email,
+            phone: form.phone,
             message: form.specs,
             subject: `New Contact Submission from ${form.name}`,
             from_name: "MY XOR TECH Specs Compiler",
@@ -222,6 +223,18 @@ export default function Contact() {
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
                       className="w-full border-thick border-primary p-4 font-mono text-body-md focus:outline-none focus:bg-surface-container-low transition-colors rounded-none"
                       placeholder="ENTER REGISTERED EMAIL NODE"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="font-mono text-label-caps font-bold text-primary">PHONE NODE</label>
+                    <input
+                      required
+                      type="tel"
+                      value={form.phone}
+                      onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                      className="w-full border-thick border-primary p-4 font-mono text-body-md focus:outline-none focus:bg-surface-container-low transition-colors rounded-none"
+                      placeholder="ENTER REGISTERED TELEPHONE NODE"
                     />
                   </div>
 
