@@ -35,9 +35,45 @@ function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    // Force ScrollTrigger to recalculate coordinate limits after page load
-    ScrollTrigger.refresh();
+    // Disable native browser scroll restoration on initial mount
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    const originalScrollBehavior = html.style.scrollBehavior;
+    
+    // Temporarily force auto/instant scroll behavior to jump instantly
+    html.style.scrollBehavior = "auto";
+    
+    const performScroll = () => {
+      window.scrollTo(0, 0);
+      if (document.body) {
+        document.body.scrollTop = 0; // fallback for Safari
+      }
+    };
+
+    // Reset scroll immediately
+    performScroll();
+
+    // Progressive backup resets to handle async renders/images loading
+    const timeouts = [
+      setTimeout(performScroll, 50),
+      setTimeout(performScroll, 150),
+      setTimeout(performScroll, 300),
+      setTimeout(performScroll, 600),
+      setTimeout(() => {
+        html.style.scrollBehavior = originalScrollBehavior;
+        ScrollTrigger.refresh();
+      }, 800)
+    ];
+
+    return () => {
+      timeouts.forEach(clearTimeout);
+      html.style.scrollBehavior = originalScrollBehavior;
+    };
   }, [pathname]);
 
   return null;

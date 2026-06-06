@@ -10,6 +10,25 @@ export default function Contact() {
   const [compilingLog, setCompilingLog] = useState([]);
   const [step, setStep] = useState("form"); // form, compiling, success
   const [submissionError, setSubmissionError] = useState(null);
+  const navigate = useNavigate();
+  const [countdown, setCountdown] = useState(4);
+
+  useEffect(() => {
+    if (step === "success") {
+      setCountdown(4);
+      const interval = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            navigate("/");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [step, navigate]);
 
   const logsSequence = [
     "> INITIALIZING CONNECTION PROTOCOL...",
@@ -269,27 +288,37 @@ export default function Contact() {
               )}
 
               {step === "success" && (
-                <div className="flex-grow flex flex-col items-center justify-center font-mono py-12 text-center select-none gap-6 animate-fade-in">
-                  <div className="w-20 h-20 bg-primary text-white flex items-center justify-center border-thick border-primary neo-shadow">
-                    <CheckCircle size={40} />
+                <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/40 backdrop-blur-md animate-fade-in">
+                  <div className="bg-white border-thick border-primary p-8 max-w-md w-full neo-shadow relative animate-scale-up">
+                    <div className="flex justify-between items-center mb-6 border-b border-primary/20 pb-3">
+                      <div className="flex items-center gap-2 text-primary font-mono text-[11px] font-bold">
+                        <span className="w-2.5 h-2.5 bg-green-500 border border-primary animate-pulse"></span>
+                        <span>TRANSMISSION SUCCESSFUL</span>
+                      </div>
+                      <span className="font-mono text-[9px] text-secondary uppercase tracking-wider">SECURE</span>
+                    </div>
+
+                    <div className="flex flex-col items-center text-center gap-6 my-4">
+                      <div className="w-20 h-20 bg-primary text-white flex items-center justify-center border-thick border-primary neo-shadow">
+                        <CheckCircle size={40} />
+                      </div>
+                      <div>
+                        <h3 className="font-display text-headline-md font-black uppercase text-primary leading-tight">
+                          FORM SUBMITTED SUCCESSFULLY!
+                        </h3>
+                        <p className="font-mono text-body-md text-secondary mt-3 uppercase leading-relaxed">
+                          Your blueprint payload has been compiled and dispatched. Redirecting to home terminal in <span className="text-primary font-bold">{countdown}s</span>...
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() => navigate("/")}
+                        className="w-full bg-primary text-on-secondary py-4 mt-4 font-display text-label-lg font-bold uppercase hover:bg-white hover:text-primary border-thick border-primary transition-all cursor-pointer active:translate-y-[2px]"
+                      >
+                        RETURN HOME IMMEDIATELY
+                      </button>
+                    </div>
                   </div>
-                  <div>
-                    <h5 className="font-display text-headline-md font-black uppercase text-primary">
-                      PAYLOAD DELIVERED // OK
-                    </h5>
-                    <p className="font-mono text-body-lg text-secondary mt-2 uppercase max-w-sm mx-auto leading-relaxed">
-                      our servers have received your blueprint package. Agent Vandals will inspect it shortly.
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setForm({ name: "", email: "", specs: "" });
-                      setStep("form");
-                    }}
-                    className="px-6 py-3 border border-primary font-mono text-label-caps uppercase hover:bg-primary hover:text-white transition-colors cursor-pointer font-bold mt-4"
-                  >
-                    COMPILE NEW TRANSMISSION
-                  </button>
                 </div>
               )}
 
@@ -304,9 +333,16 @@ export default function Contact() {
         .animate-fade-in {
           animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
+        .animate-scale-up {
+          animation: scaleUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }
+        }
+        @keyframes scaleUp {
+          from { transform: scale(0.9); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
         }
       `}</style>
     </div>
