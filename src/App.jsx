@@ -273,7 +273,7 @@ export default function App() {
           <Footer />
         </div>
       </PageLoaderWrapper>
-      {process.env.NODE_ENV === "development" && <Agentation />}
+      {import.meta.env.DEV && <Agentation />}
     </Router>
   );
 }

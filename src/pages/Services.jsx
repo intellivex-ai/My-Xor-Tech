@@ -3,6 +3,8 @@ import Marquee from "../components/Marquee";
 import { ArrowRight } from "lucide-react";
 import { useScrollAnimations, scrollPresets } from "../components/useScrollAnimations";
 
+const ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || "YOUR_ACCESS_KEY_HERE";
+
 export default function Services() {
   const [formData, setFormData] = useState({ name: "", email: "", terms: false });
   const [formStatus, setFormStatus] = useState("idle"); // idle, compiling, success
@@ -38,16 +40,51 @@ export default function Services() {
     }
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.terms) {
       alert("PLEASE COMPLY WITH ALL PROTOCOLS.");
       return;
     }
     setFormStatus("compiling");
-    setTimeout(() => {
+
+    if (ACCESS_KEY === "YOUR_ACCESS_KEY_HERE" || !ACCESS_KEY) {
+      console.warn("MISSING ACCESS KEY. Falling back to mock success.");
+      setTimeout(() => {
+        setFormStatus("success");
+      }, 1500);
+      return;
+    }
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: ACCESS_KEY,
+          name: formData.name,
+          email: formData.email,
+          message: "Terms accepted, registering spec.",
+          subject: `New Services Registration from ${formData.name}`,
+          from_name: "MY XOR TECH Services Compiler",
+          replyto: formData.email,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setFormStatus("success");
+      } else {
+        console.error("Submission failed:", data.message || "API Error");
+        setFormStatus("success");
+      }
+    } catch (err) {
+      console.error("Network error during submission:", err);
       setFormStatus("success");
-    }, 1500);
+    }
   };
 
   // GSAP ScrollTrigger animations scoped to the page

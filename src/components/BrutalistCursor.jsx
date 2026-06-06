@@ -29,12 +29,16 @@ export default function BrutalistCursor() {
 
     const handleMouseOver = (e) => {
       const target = e.target;
+      if (!target || typeof target.closest !== "function") {
+        setIsHovering(false);
+        return;
+      }
       if (
         target.tagName === "A" ||
         target.tagName === "BUTTON" ||
         target.closest("button") ||
         target.closest("a") ||
-        target.classList.contains("cursor-pointer") ||
+        (target.classList && target.classList.contains("cursor-pointer")) ||
         target.closest(".cursor-pointer")
       ) {
         setIsHovering(true);
